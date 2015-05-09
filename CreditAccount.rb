@@ -39,7 +39,10 @@ class CreditAccount
 		return type, amount
 	end
 
-	def do_transaction(type, amount)
+	def do_transaction
+		user_input = init_transaction
+		type = user_input[0]
+		amount = user_input[1]
     	transaction = Transaction.new(@transactions.length, type, amount)
     	@transactions << transaction
     	if (type == "withdrawal")
