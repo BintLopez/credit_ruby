@@ -26,10 +26,17 @@ class CreditAccount
 			verb = "pay"
 		else
 			puts "Please type either 'payment' or 'withdrawal'."
+			type = gets.chomp
+			if type == "withdrawal"
+				verb = "withdraw"
+			elsif type == "payment"
+				verb = "pay"
+			end
 		end
 		puts "Great, you're making a #{type}."
 		puts "What amount would you like to #{verb}?"
 		amount = gets.chomp.to_f
+		return type, amount
 	end
 
 	def do_transaction(type, amount)
