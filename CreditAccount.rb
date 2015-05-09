@@ -50,6 +50,11 @@ class CreditAccount
 	    elsif (type == "payment")
 	      	@principal -= amount
     	end
+    	@remaining_credit = @limit - @principal
+    	puts "Thanks for making your transaction. \nYour principal is now $#{principal}. \nYour remaining credit is $#{remaining_credit}." 
   	end
 
 end
+
+# acct = CreditAccount.new
+# acct.do_transaction
