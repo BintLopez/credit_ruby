@@ -2,15 +2,20 @@ require "date"
 
 class Transaction
   
-  	attr_accessor :id, :timestamp, :amount, :type, :day_stamp
+  	attr_accessor :id, :timestamp, :amount, :type, :day_stamp, :acct_principal, :acct_remaining_credit
 
-  	def initialize(id)
+  	def initialize(id, acct_snapshot)
     	@id = id
     	@timestamp = Time.now
     	@day_stamp = Date.today
-    	@type = get_type
-    	@amount = get_amount
+    	@acct_principal = acct_snapshot[0]
+    	@acct_remaining_credit = acct_snapshot[1]
   	end
+
+  	def complete_transaction
+  		@type = get_type
+    	@amount = get_amount
+    end
 
     def get_type
   		puts "Is this a payment or withdrawal?"
@@ -39,8 +44,7 @@ class Transaction
 			puts "Please type either 'payment' or 'withdrawal'."
 			get_type
 		else
-			valid = true
-			@type = type
+			@type = @type
 		end
 	end
 
@@ -50,9 +54,21 @@ class Transaction
 		elsif payment?
 			verb = "pay"
 		end
-		puts "Great, you're making a #{type}."
 		puts "What amount would you like to #{verb}?"
 		@amount = gets.chomp.to_f
+		validate_amt
+	end
+
+	def validate_amt
+		if withdrawal? && @amount > @acct_remaining_credit
+			puts "You can only take out up to the amount of your remaining credit: $#{acct_remaining_credit}."
+			get_amount
+		elsif payment? && @amount > @acct_principal	
+			puts "You don't need to make a payment larger than #{acct_principal}."
+			get_amount		
+		else
+			@amount = @amount
+		end
 	end
 
 end
