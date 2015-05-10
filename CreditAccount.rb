@@ -4,7 +4,7 @@ require_relative "Billing"
 
 class CreditAccount
 
-	attr_accessor :limit, :apr, :principal, :remaining_credit, :transactions, :start_date
+	attr_accessor :limit, :apr, :principal, :remaining_credit, :transactions, :start_date, :principals, :timestamps, :duration
 
 	def initialize
 		@transactions = Array.new
@@ -50,26 +50,37 @@ class CreditAccount
 	def get_transactions
 		@principals = []
 		@timestamps = []
+		@duration = []
 		transactions.each do |t|
 			@principals << t.acct_principal
 			@timestamps << t.timestamp
 		end
 		@principals << @principal
 		@timestamps << Time.now
-		puts @principals
-		puts @timestamps
+		num_times = @timestamps.length - 1
+		num_times.downto(0) do |i|
+			@duration << @timestamps[i] - @timestamps[i-1]
+		end
+		#puts @duration
+		num_times.downto(1) do |c|
+			calc_interest(@principals[c], @duration[c])
+		end
 	end
 
-  	# def calc_interest
-
-  	# 	interest = @principal * @apr / 365 *
-  	# end
+  	def calc_interest(principal, duration)
+  		interest = principal * @apr / 365 * duration
+  		puts interest
+  	end
 
 end
 
 #capitalized so could access in irb -- made it immutable?
 Acct = CreditAccount.new
 Acct.do_transaction
+Acct.do_transaction
+Acct.do_transaction
+Acct.do_transaction
+Acct.get_transactions
 # puts "Start date is " + acct.start_date.to_s
 # Learned:  can't use strftime with DateTime obj... only on Time
 # puts acct.start_date.strftime("%Y-%m-%d %H:%M:%S")
