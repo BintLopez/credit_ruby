@@ -28,6 +28,17 @@ class CreditAccount
 
 	#MAKE A FUNCTION THAT WHEN IT REACHES END_BILLING RESETS THE BILLING CYCLE
 
+	def amt_check(amount)
+		if @remaining_credit + amount <= @limit
+			
+		else
+			puts "You don't need to make a payment."
+			amount = 0
+		end
+		return amount
+	end
+
+
 	def init_transaction
 		puts "Is this a payment or withdrawal?"
 		type = gets.chomp
@@ -47,12 +58,7 @@ class CreditAccount
 		#puts "Great, you're making a #{type}."
 		puts "What amount would you like to #{verb}?"
 		amount = gets.chomp.to_f
-		if @remaining_credit + amount <= @limit
-			return type, amount
-		else
-			puts "You don't need to make a payment."
-			amount = 0
-		end
+		amt_check(amount)
 	end
 
 	def do_transaction
@@ -78,9 +84,9 @@ class CreditAccount
 
 end
 
-
-acct = CreditAccount.new
-acct.do_transaction
-puts "Start date is " + acct.start_date
+#capitalized so could access in irb -- made it immutable?
+Acct = CreditAccount.new
+Acct.do_transaction
+# puts "Start date is " + acct.start_date.to_s
 # Learned:  can't use strftime with DateTime obj... only on Time
 # puts acct.start_date.strftime("%Y-%m-%d %H:%M:%S")
