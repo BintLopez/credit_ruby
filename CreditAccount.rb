@@ -38,22 +38,15 @@ class CreditAccount
 		return amount
 	end
 
-
 	def init_transaction
 		puts "Is this a payment or withdrawal?"
 		type = gets.chomp
-		if type == "withdrawal"
+		if withdrawal?(type)
 			verb = "withdraw"
-		elsif type == "payment"
+		elsif payment?(type)
 			verb = "pay"
 		else
-			puts "Please type either 'payment' or 'withdrawal'."
-			type = gets.chomp
-			if type == "withdrawal"
-				verb = "withdraw"
-			elsif type == "payment"
-				verb = "pay"
-			end
+			validate_type(type)
 		end
 		#puts "Great, you're making a #{type}."
 		puts "What amount would you like to #{verb}?"
@@ -61,6 +54,29 @@ class CreditAccount
 		#amt_check(amount) -- (not currently working)
 		return type, amount
 	end
+
+	# def init_transaction
+	# 	puts "Is this a payment or withdrawal?"
+	# 	type = gets.chomp
+	# 	if type == "withdrawal"
+	# 		verb = "withdraw"
+	# 	elsif type == "payment"
+	# 		verb = "pay"
+	# 	else
+	# 		puts "Please type either 'payment' or 'withdrawal'."
+	# 		type = gets.chomp
+	# 		if type == "withdrawal"
+	# 			verb = "withdraw"
+	# 		elsif type == "payment"
+	# 			verb = "pay"
+	# 		end
+	# 	end
+	# 	#puts "Great, you're making a #{type}."
+	# 	puts "What amount would you like to #{verb}?"
+	# 	amount = gets.chomp.to_f
+	# 	#amt_check(amount) -- (not currently working)
+	# 	return type, amount
+	# end
 
 	def do_transaction
 		user_input = init_transaction
@@ -77,6 +93,29 @@ class CreditAccount
     	puts "Thanks for making your transaction."
     	account_check
   	end
+
+  	def withdrawal?(type)
+		if type == "withdrawal"
+			return true
+		else
+			false
+		end
+	end
+
+	def payment?(type)
+		if type == "payment"
+			return true
+		else
+			false
+		end
+	end
+
+	def validate_type(type)
+		if !withdrawal?(type) && !payment?(type)
+			puts "Please type either 'payment' or 'withdrawal'."
+		init_transaction
+		end
+	end
 
   	# def calc_interest
 
