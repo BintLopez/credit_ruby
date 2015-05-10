@@ -14,7 +14,7 @@ class CreditAccount
 		@limit = gets.chomp.to_f
 		@remaining_credit = @limit
 		billing_cycle
-		@start_date = DateTime.today
+		@start_date = DateTime.now
 	end
 
 	def account_check
@@ -44,10 +44,15 @@ class CreditAccount
 				verb = "pay"
 			end
 		end
-		puts "Great, you're making a #{type}."
+		#puts "Great, you're making a #{type}."
 		puts "What amount would you like to #{verb}?"
 		amount = gets.chomp.to_f
-		return type, amount
+		if @remaining_credit + amount <= @limit
+			return type, amount
+		else
+			puts "You don't need to make a payment."
+			amount = 0
+		end
 	end
 
 	def do_transaction
@@ -74,6 +79,8 @@ class CreditAccount
 end
 
 
-
-# acct = CreditAccount.new
-# acct.do_transaction
+acct = CreditAccount.new
+acct.do_transaction
+puts "Start date is " + acct.start_date
+# Learned:  can't use strftime with DateTime obj... only on Time
+# puts acct.start_date.strftime("%Y-%m-%d %H:%M:%S")
