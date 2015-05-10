@@ -1,8 +1,10 @@
 require_relative "Transaction"
+require "date"
+# require_relative "Billing"
 
 class CreditAccount
 
-	attr_accessor :limit, :apr, :principal, :remaining_credit, :transactions
+	attr_accessor :limit, :apr, :principal, :remaining_credit, :transactions, :start_date
 
 	def initialize
 		@transactions = Array.new
@@ -11,11 +13,15 @@ class CreditAccount
 		puts "What's the limit on the account?"
 		@limit = gets.chomp.to_f
 		@remaining_credit = @limit
+		billing_cycle
 	end
 
-	def get_principal
-		puts "This is the principal: $#{principal}"
+	def billing_cycle
+		@start_billing = Date.today
+		@end_billing = @start_billing + 30
 	end
+
+	#MAKE A FUNCTION THAT WHEN IT REACHES END_BILLING RESETS THE BILLING CYCLE
 
 	def init_transaction
 		puts "Is this a payment or withdrawal?"
@@ -54,7 +60,14 @@ class CreditAccount
     	puts "Thanks for making your transaction. \nYour principal is now $#{principal}. \nYour remaining credit is $#{remaining_credit}." 
   	end
 
+  	# def calc_interest
+
+  	# 	interest = @principal * @apr / 365 *
+  	# end
+
 end
+
+
 
 # acct = CreditAccount.new
 # acct.do_transaction
