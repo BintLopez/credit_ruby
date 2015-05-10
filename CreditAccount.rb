@@ -42,71 +42,18 @@ class CreditAccount
 		return amount
 	end
 
-	# def init_transaction
-	# 	type = get_type
-	# 	# puts "Is this a payment or withdrawal?"
-	# 	# type = gets.chomp
-	# 	validate_type(type)
-	# 	if withdrawal?(type)
-	# 		verb = "withdraw"
-	# 	elsif payment?(type)
-	# 		verb = "pay"
-	# 	end
-	# 	#puts "Great, you're making a #{type}."
-	# 	puts "What amount would you like to #{verb}?"
-	# 	amount = gets.chomp.to_f
-	# 	amt_check(amount)
-	# 	#amt_check(amount) -- (not currently working)
-	# 	return type, amount
-	# end
-
 	def do_transaction
-		user_input = init_transaction
-		type = user_input[0]
-		amount = user_input[1]
-    	transaction = Transaction.new(@transactions.length, type, amount)
+    	transaction = Transaction.new(@transactions.length)
     	@transactions << transaction
-    	if (type == "withdrawal")
-      		@principal += amount
-	    elsif (type == "payment")
-	      	@principal -= amount
+    	if (transaction.type == "withdrawal")
+      		@principal += transaction.amount
+	    elsif (transaction.type == "payment")
+	      	@principal -= transaction.amount
     	end
     	@remaining_credit = @limit - @principal
     	puts "Thanks for making your transaction."
     	account_check
   	end
-
- #  	def get_type
- #  		puts "Is this a payment or withdrawal?"
-	# 	type = gets.chomp
-	# 	return type
-	# end
-
- #  	def withdrawal?(type)
-	# 	if type == "withdrawal"
-	# 		return true
-	# 	else
-	# 		false
-	# 	end
-	# end
-
-	# def payment?(type)
-	# 	if type == "payment"
-	# 		return true
-	# 	else
-	# 		false
-	# 	end
-	# end
-
-	# def validate_type(type)
-	# 	if !withdrawal?(type) && !payment?(type)
-	# 		puts "Please type either 'payment' or 'withdrawal'."
-	# 		type = get_type
-	# 		return type
-	# 	else
-	# 		valid = true
-	# 	end
-	# end
 
   	# def calc_interest
 
