@@ -39,8 +39,9 @@ class CreditAccount
 	end
 
 	def init_transaction
-		puts "Is this a payment or withdrawal?"
-		type = gets.chomp
+		type = get_type
+		# puts "Is this a payment or withdrawal?"
+		# type = gets.chomp
 		if withdrawal?(type)
 			verb = "withdraw"
 		elsif payment?(type)
@@ -94,6 +95,11 @@ class CreditAccount
     	account_check
   	end
 
+  	def get_type
+  		puts "Is this a payment or withdrawal?"
+		type = gets.chomp
+	end
+
   	def withdrawal?(type)
 		if type == "withdrawal"
 			return true
@@ -113,7 +119,7 @@ class CreditAccount
 	def validate_type(type)
 		if !withdrawal?(type) && !payment?(type)
 			puts "Please type either 'payment' or 'withdrawal'."
-		init_transaction
+		get_type
 		end
 	end
 
