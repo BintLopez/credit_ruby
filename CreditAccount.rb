@@ -29,11 +29,15 @@ class CreditAccount
 	#MAKE A FUNCTION THAT WHEN IT REACHES END_BILLING RESETS THE BILLING CYCLE
 
 	def amt_check(amount)
-		if @remaining_credit + amount <= @limit	
-			amount = amount	
-		else
-			puts "You don't need to make a payment."
+		if amount >= @remaining_credit
+			puts "You can only take out up to $#{remaining_credit}."
 			amount = 0
+		#if @remaining_credit + amount <= @limit	
+			#amount = amount
+		elsif @remaining_credit + amount >= @limit
+			puts "You don't need to make a payment."	
+		else
+			amount = amount
 		end
 		return amount
 	end
@@ -42,20 +46,83 @@ class CreditAccount
 		type = get_type
 		# puts "Is this a payment or withdrawal?"
 		# type = gets.chomp
+		validate_type(type)
 		if withdrawal?(type)
 			verb = "withdraw"
 		elsif payment?(type)
 			verb = "pay"
-		else
-			validate_type(type)
 		end
 		#puts "Great, you're making a #{type}."
 		puts "What amount would you like to #{verb}?"
 		amount = gets.chomp.to_f
+		amt_check(amount)
 		#amt_check(amount) -- (not currently working)
 		return type, amount
 	end
 
+	def do_transaction
+		user_input = init_transaction
+		type = user_input[0]
+		amount = user_input[1]
+    	transaction = Transaction.new(@transactions.length, type, amount)
+    	@transactions << transaction
+    	if (type == "withdrawal")
+      		@principal += amount
+	    elsif (type == "payment")
+	      	@principal -= amount
+    	end
+    	@remaining_credit = @limit - @principal
+    	puts "Thanks for making your transaction."
+    	account_check
+  	end
+
+  	def get_type
+  		puts "Is this a payment or withdrawal?"
+		type = gets.chomp
+		return type
+	end
+
+  	def withdrawal?(type)
+		if type == "withdrawal"
+			return true
+		else
+			false
+		end
+	end
+
+	def payment?(type)
+		if type == "payment"
+			return true
+		else
+			false
+		end
+	end
+
+	def validate_type(type)
+		if !withdrawal?(type) && !payment?(type)
+			puts "Please type either 'payment' or 'withdrawal'."
+			return type = get_type
+		else
+			puts "Input type's valid"
+		end
+	end
+
+  	# def calc_interest
+
+  	# 	interest = @principal * @apr / 365 *
+  	# end
+
+end
+
+#capitalized so could access in irb -- made it immutable?
+Acct = CreditAccount.new
+Acct.do_transaction
+# puts "Start date is " + acct.start_date.to_s
+# Learned:  can't use strftime with DateTime obj... only on Time
+# puts acct.start_date.strftime("%Y-%m-%d %H:%M:%S")
+
+
+#FLAG FOR DELETION
 	# def init_transaction
 	# 	puts "Is this a payment or withdrawal?"
 	# 	type = gets.chomp
@@ -78,61 +145,3 @@ class CreditAccount
 	# 	#amt_check(amount) -- (not currently working)
 	# 	return type, amount
 	# end
-
-	def do_transaction
-		user_input = init_transaction
-		type = user_input[0]
-		amount = user_input[1]
-    	transaction = Transaction.new(@transactions.length, type, amount)
-    	@transactions << transaction
-    	if (type == "withdrawal")
-      		@principal += amount
-	    elsif (type == "payment")
-	      	@principal -= amount
-    	end
-    	@remaining_credit = @limit - @principal
-    	puts "Thanks for making your transaction."
-    	account_check
-  	end
-
-  	def get_type
-  		puts "Is this a payment or withdrawal?"
-		type = gets.chomp
-	end
-
-  	def withdrawal?(type)
-		if type == "withdrawal"
-			return true
-		else
-			false
-		end
-	end
-
-	def payment?(type)
-		if type == "payment"
-			return true
-		else
-			false
-		end
-	end
-
-	def validate_type(type)
-		if !withdrawal?(type) && !payment?(type)
-			puts "Please type either 'payment' or 'withdrawal'."
-		get_type
-		end
-	end
-
-  	# def calc_interest
-
-  	# 	interest = @principal * @apr / 365 *
-  	# end
-
-end
-
-#capitalized so could access in irb -- made it immutable?
-Acct = CreditAccount.new
-Acct.do_transaction
-# puts "Start date is " + acct.start_date.to_s
-# Learned:  can't use strftime with DateTime obj... only on Time
-# puts acct.start_date.strftime("%Y-%m-%d %H:%M:%S")
