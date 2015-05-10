@@ -14,6 +14,11 @@ class CreditAccount
 		@limit = gets.chomp.to_f
 		@remaining_credit = @limit
 		billing_cycle
+		@start_date = DateTime.today
+	end
+
+	def account_check
+		puts "Your principal is now $#{principal}. \nYour remaining credit is $#{remaining_credit}." 
 	end
 
 	def billing_cycle
@@ -57,7 +62,8 @@ class CreditAccount
 	      	@principal -= amount
     	end
     	@remaining_credit = @limit - @principal
-    	puts "Thanks for making your transaction. \nYour principal is now $#{principal}. \nYour remaining credit is $#{remaining_credit}." 
+    	puts "Thanks for making your transaction."
+    	account_check
   	end
 
   	# def calc_interest
