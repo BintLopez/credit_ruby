@@ -1,6 +1,6 @@
 require_relative "Transaction"
 require "date"
-# require_relative "Billing"
+require_relative "Billing"
 
 class CreditAccount
 
@@ -17,20 +17,20 @@ class CreditAccount
 		@start_date = DateTime.now
 	end
 
-	def account_check
-		puts "Your principal is now $#{principal}. \nYour remaining credit is $#{remaining_credit}." 
-	end
-
 	def billing_cycle
 		@start_billing = Date.today
 		@end_billing = @start_billing + 30
 	end
 
+	def account_check
+		puts "Your principal is now $#{principal}. \nYour remaining credit is $#{remaining_credit}." 
+	end
+
 	#MAKE A FUNCTION THAT WHEN IT REACHES END_BILLING RESETS THE BILLING CYCLE
 
 	def amt_check(amount)
-		if @remaining_credit + amount <= @limit
-			
+		if @remaining_credit + amount <= @limit	
+			amount = amount	
 		else
 			puts "You don't need to make a payment."
 			amount = 0
@@ -58,7 +58,8 @@ class CreditAccount
 		#puts "Great, you're making a #{type}."
 		puts "What amount would you like to #{verb}?"
 		amount = gets.chomp.to_f
-		amt_check(amount)
+		#amt_check(amount) -- (not currently working)
+		return type, amount
 	end
 
 	def do_transaction
