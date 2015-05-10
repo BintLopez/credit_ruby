@@ -28,22 +28,21 @@ class CreditAccount
 
 	#MAKE A FUNCTION THAT WHEN IT REACHES END_BILLING RESETS THE BILLING CYCLE
 
-	def amt_check(amount)
-		if amount >= @remaining_credit
-			puts "You can only take out up to $#{remaining_credit}."
-			amount = 0
-		#if @remaining_credit + amount <= @limit	
-			#amount = amount
-		elsif @remaining_credit + amount >= @limit
-			puts "You don't need to make a payment."	
+	def amt_check(t)
+		if t.type == "withdrawal" && t.amount > @remaining_credit
+			puts "You can only take out up to the amount of your remaining credit: $#{remaining_credit}."
+			t.amount = t.get_amount
+		elsif t.type == "payment" && t.amount > @principal	
+			puts "You don't need to make a payment larger than #{principal}."
+			t.amount = t.get_amount		
 		else
-			amount = amount
+			t.amount = t.amount
 		end
-		return amount
 	end
 
 	def do_transaction
     	transaction = Transaction.new(@transactions.length)
+    	amt_check(transaction)
     	@transactions << transaction
     	if (transaction.type == "withdrawal")
       		@principal += transaction.amount
