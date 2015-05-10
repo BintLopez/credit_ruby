@@ -4,7 +4,7 @@ require_relative "Billing"
 
 class CreditAccount
 
-	attr_accessor :limit, :apr, :principal, :remaining_credit, :transactions, :start_date, :principals, :timestamps, :duration
+	attr_accessor :limit, :apr, :principal, :remaining_credit, :transactions, :start_date, :start_time, :principals, :timestamps, :duration
 
 	def initialize
 		@transactions = Array.new
@@ -15,6 +15,9 @@ class CreditAccount
 		@remaining_credit = @limit
 		billing_cycle
 		@start_date = DateTime.now
+		@start_time = Time.now
+		@principals = []
+		@timestamps = []
 	end
 
 	def account_check
@@ -48,18 +51,16 @@ class CreditAccount
 	end
 
 	def get_transactions
-		@principals = []
-		@timestamps = []
 		@duration = []
 		transactions.each do |t|
 			@principals << t.acct_principal
 			@timestamps << t.timestamp
 		end
 		@principals << @principal
-		@timestamps << Time.now
+		@timestamps << @start_time + 30
 		num_times = @timestamps.length - 1
-		num_times.downto(0) do |i|
-			@duration << @timestamps[i] - @timestamps[i-1]
+		0.upto(num_times) do |i|
+			@duration << @timestamps[i+1] - @timestamps[i]
 		end
 		#puts @duration
 		num_times.downto(1) do |c|
