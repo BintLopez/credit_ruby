@@ -17,7 +17,7 @@ class CreditAccount
 		@start_date = DateTime.now
 		@start_time = Time.now
 		@principals = []
-		@timestamps = []
+		@timestamps = [@start_time]
 	end
 
 	def account_check
@@ -59,13 +59,16 @@ class CreditAccount
 		@principals << @principal
 		@timestamps << @start_time + 30
 		num_times = @timestamps.length - 1
-		0.upto(num_times) do |i|
-			@duration << @timestamps[i+1] - @timestamps[i]
+		num_times.downto(1) do |i|
+			diff = @timestamps[i] - @timestamps[i-1]
+			@duration << diff.round
 		end
-		#puts @duration
-		num_times.downto(1) do |c|
-			calc_interest(@principals[c], @duration[c])
-		end
+		@duration = @duration.reverse
+		puts @duration
+		# #puts @duration
+		# num_times.downto(1) do |c|
+		# 	calc_interest(@principals[c], @duration[c])
+		# end
 	end
 
   	def calc_interest(principal, duration)
@@ -81,7 +84,7 @@ Acct.do_transaction
 Acct.do_transaction
 Acct.do_transaction
 Acct.do_transaction
-Acct.get_transactions
+#Acct.get_transactions
 # puts "Start date is " + acct.start_date.to_s
 # Learned:  can't use strftime with DateTime obj... only on Time
 # puts acct.start_date.strftime("%Y-%m-%d %H:%M:%S")
