@@ -4,7 +4,7 @@ require_relative "Billing"
 
 class CreditAccount
 
-	attr_accessor :limit, :apr, :principal, :remaining_credit, :transactions, :start_date, :start_time, :principals, :timestamps, :duration
+	attr_accessor :limit, :apr, :principal, :remaining_credit, :transactions, :start_date, :start_time, :principals, :timestamps, :duration, :amt_due
 
 	def initialize
 		@transactions = Array.new
@@ -50,30 +50,38 @@ class CreditAccount
 		@end_billing = @start_billing + 30
 	end
 
-	def get_transactions
+	def get_duration
 		@duration = []
+		num_times = @timestamps.length - 1
+		num_times.downto(1) do |i|
+			diff = @timestamps[i] - @timestamps[i-1]
+			@duration << diff
+		end
+		@duration = @duration.reverse
+	end
+
+	def get_transaction_arrays
 		transactions.each do |t|
 			@principals << t.acct_principal
 			@timestamps << t.timestamp
 		end
 		@principals << @principal
 		@timestamps << @start_time + 30
-		num_times = @timestamps.length - 1
-		num_times.downto(1) do |i|
-			diff = @timestamps[i] - @timestamps[i-1]
-			@duration << diff.round
+		get_duration
+	end
+
+	def calc_amt_due
+		interest = 0
+		0.upto(@principals.length-1) do |i|
+			interest += calc_interest(@principals[i], @duration[i])
 		end
-		@duration = @duration.reverse
-		puts @duration
-		# #puts @duration
-		# num_times.downto(1) do |c|
-		# 	calc_interest(@principals[c], @duration[c])
-		# end
+		amt_due = @principal + interest
+		@amt_due = amt_due
 	end
 
   	def calc_interest(principal, duration)
   		interest = principal * @apr / 365 * duration
-  		puts interest
+  		return interest
   	end
 
 end
