@@ -12,8 +12,8 @@ class CreditAccount
 		puts "What's the limit on the account?"
 		@limit = gets.chomp.to_f
 		@remaining_credit = @limit
-		billing_cycle
 		@start_time = Time.now
+		billing_cycle
 		@principals = []
 		@timestamps = [@start_time]
 	end
@@ -58,19 +58,9 @@ class CreditAccount
 		@duration = @duration.reverse
 	end
 
-	# def get_transaction_arrays
-	# 	transactions.each do |t|
-	# 		@principals << t.acct_principal
-	# 		@timestamps << t.timestamp
-	# 	end
-	# 	@principals << @principal
-	# 	@timestamps << @end_billing_test
-	# 	get_duration
-	# end
-
 	def get_transaction_arrays
 		transactions.each do |t|
-			if t.timestamps.between(@start_billing_test, @end_billing_test)
+			if t.timestamp.between?(@start_billing_test, @end_billing_test)
 				@principals << t.acct_principal
 				@timestamps << t.timestamp
 			end
