@@ -77,6 +77,7 @@ class CreditAccount
 		0.upto(@principals.length-1) do |i|
 			interest += calc_interest(@principals[i], @duration[i])
 		end
+		interest = interest.round(2)
 		amt_due = @principal + interest
 		@amt_due = amt_due.round(2)
 		puts "Your principal is #{principal}.\nTotal interest for this billing cycle is $#{interest}.\nThe total amount due is $#{amt_due}."
@@ -84,7 +85,7 @@ class CreditAccount
 
   	def calc_interest(principal, duration)
   		interest = principal * @apr / 365 * duration
-  		return interest.round(2)
+  		return interest
   	end
 
 end
