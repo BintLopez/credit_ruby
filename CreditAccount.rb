@@ -1,6 +1,5 @@
 require "date"
 require_relative "Transaction"
-require_relative "Billing"
 
 class CreditAccount
 
@@ -43,10 +42,11 @@ class CreditAccount
     	balance_check
   	end
 
- #  	def billing_cycle
-	# 	@start_billing = Date.today
-	# 	@end_billing = @start_billing + 30
-	# end
+  	def billing_cycle
+		@start_billing = Date.today
+		@end_billing = @start_billing + 30
+		@end_billing_test = @start_time + 30
+	end
 
 	def get_duration
 		@duration = []
@@ -64,7 +64,7 @@ class CreditAccount
 			@timestamps << t.timestamp
 		end
 		@principals << @principal
-		@timestamps << @start_time + 30
+		@timestamps << @end_billing_test
 		get_duration
 	end
 

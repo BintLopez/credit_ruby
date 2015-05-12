@@ -43,6 +43,9 @@ class Transaction
 		if !withdrawal? && !payment?
 			puts "Please type either 'payment' or 'withdrawal'."
 			get_type
+		elsif payment? && @acct_principal == 0
+			puts "You don't need to make a payment.\nHow about you withdraw instead..."
+			get_type
 		else
 			@type = @type
 		end
