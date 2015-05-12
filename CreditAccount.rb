@@ -3,7 +3,7 @@ require_relative "Transaction"
 
 class CreditAccount
 
-	attr_accessor :limit, :apr, :principal, :remaining_credit, :transactions, :start_time, :principals, :timestamps, :duration, :amt_due
+	attr_accessor :limit, :apr, :principal, :remaining_credit, :transactions, :start_time, :start_date, :principals, :timestamps, :duration, :amt_due
 
 	def initialize
 		@transactions = Array.new
@@ -13,7 +13,8 @@ class CreditAccount
 		@limit = gets.chomp.to_f
 		@remaining_credit = @limit
 		@start_time = Time.now
-		billing_cycle
+		@start_date = DateTime.now
+		billing_cycle(@start_time)
 		@principals = []
 		@timestamps = [@start_time]
 	end
@@ -41,11 +42,11 @@ class CreditAccount
     	balance_check
   	end
 
-  	def billing_cycle
-		@start_billing = Date.today
-		@end_billing = @start_billing + 30
-		@start_billing_test = @start_time
-		@end_billing_test = @start_time + 30
+  	def billing_cycle(day_or_time)
+		@start_billing = day_or_time
+		@end_billing = day_or_time + 30
+		# @start_billing_test = @start_time
+		# @end_billing_test = @start_time + 30
 	end
 
 	def get_duration
@@ -60,13 +61,13 @@ class CreditAccount
 
 	def get_transaction_arrays
 		transactions.each do |t|
-			if t.timestamp.between?(@start_billing_test, @end_billing_test)
+			if t.timestamp.between?(@start_billing, @end_billing)
 				@principals << t.acct_principal
 				@timestamps << t.timestamp
 			end
 		end
 		@principals << @principal
-		@timestamps << @end_billing_test
+		@timestamps << @end_billing
 		get_duration
 	end
 
