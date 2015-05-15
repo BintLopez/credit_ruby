@@ -5,9 +5,11 @@ class CreditAccount
 
 	attr_accessor :limit, :apr, :principal, :remaining_credit, :transactions, :start_time, :start_date, :principals, :timestamps, :duration, :amt_due
 
+	APR = 0.35
+
 	def initialize
 		@transactions = Array.new
-		@apr = 0.35
+		@apr = APR
 		@principal = 0
 		puts "What's the limit on the account?"
 		@limit = gets.chomp.to_f
